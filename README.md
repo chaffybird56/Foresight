@@ -54,5 +54,4 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 <br>
 <img src="outputs_anomalies.png" width="720" alt="Anomaly view"/>
 
-## 📄 Report
-The full write-up (including appendix and references) is in [`report/report.tex`](report/report.tex).
+
