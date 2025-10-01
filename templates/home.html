@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="h6 text-uppercase muted">Availability</div>
+        <div id="kpi-availability" class="display-6">{{ kpi.availability_pct }}%</div>
+        <div class="small muted">Past 7 days (approx.)</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="h6 text-uppercase muted">Demand Failures (7d)</div>
+        <div id="kpi-demand" class="display-6">{{ kpi.demand_failures }}</div>
+        <div class="small muted">Low-flow excursions over threshold</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="h6 text-uppercase muted">Open Work Orders (mock)</div>
+        <div id="kpi-wos" class="display-6">{{ kpi.open_work_orders }}</div>
+        <div class="small muted">From mock events</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-3 mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Last 24h Trend</h5>
+      <div class="small"><a href="/anomalies">Anomalies</a> · <a href="/reliability">Reliability</a></div>
+    </div>
+    <canvas id="chart24" height="110"></canvas>
+  </div>
+
+  <script>
+    // Chart.js config (time scale) per docs. :contentReference[oaicite:5]{index=5}
+    const ctx = document.getElementById('chart24').getContext('2d');
+    const colors = {
+      flow:  'rgba(18,184,134,0.9)',   // teal
+      dp:    'rgba(132,94,247,0.9)',   // grape
+      temp:  'rgba(255,159,64,0.9)',   // orange
+      vib:   'rgba(25,130,196,0.9)'    // cyan-ish
+    };
+
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: [
+          {label:'flow_kg_s', borderColor: colors.flow, data: [], parsing:false},
+          {label:'dp_kPa',    borderColor: colors.dp,   data: [], parsing:false},
+          {label:'temp_C',    borderColor: colors.temp, data: [], parsing:false},
+          {label:'vib_mm_s',  borderColor: colors.vib,  data: [], parsing:false}
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: { type: 'time', time: { unit: 'hour' }, title:{display:true, text:'Time'} },
+          y: { title:{display:true, text:'Value'} }
+        },
+        plugins: { legend: { display: true } }
+      }
+    });
+
+    async function refreshKPIs(){
+      const r = await fetch('/api/kpis'); const k = await r.json();
+      document.getElementById('kpi-availability').textContent = k.availability_pct + '%';
+      document.getElementById('kpi-demand').textContent = k.demand_failures;
+      document.getElementById('kpi-wos').textContent = k.open_work_orders;
+    }
+
+    async function refreshLast24(){
+      const r = await fetch('/api/last24'); const d = await r.json();
+      const ts = d.ts; if (!ts || ts.length === 0) return;
+
+      const toXY = (arr) => arr.map((v, i) => ({x: ts[i], y: v}));
+      chart.data.datasets[0].data = toXY(d.series.flow_kg_s);
+      chart.data.datasets[1].data = toXY(d.series.dp_kPa);
+      chart.data.datasets[2].data = toXY(d.series.temp_C);
+      chart.data.datasets[3].data = toXY(d.series.vib_mm_s);
+      chart.update('none');
+    }
+
+    // Initial load + 5s polling
+    refreshKPIs(); refreshLast24();
+    setInterval(refreshKPIs, 5000);
+    setInterval(refreshLast24, 5000);
+  </script>
+{% endblock %}

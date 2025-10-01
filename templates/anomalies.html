@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card p-3">
+    <h5 class="mb-3">Anomalies (last 24h)</h5>
+    <canvas id="anom" height="110"></canvas>
+  </div>
+
+  <script>
+    const ca = document.getElementById('anom').getContext('2d');
+    const anChart = new Chart(ca, {
+      type: 'line',
+      data: { datasets: [
+        {label:'flow_kg_s', borderColor:'rgba(18,184,134,0.9)', data:[], parsing:false},
+        {label:'outliers',  borderColor:'rgba(220,38,38,0.9)', data:[], parsing:false, showLine:false, pointStyle:'cross', radius:4}
+      ]},
+      options: {
+        interaction:{mode:'nearest', intersect:false},
+        scales:{ x:{type:'time', time:{unit:'hour'}}, y:{title:{display:true, text:'Flow (kg/s)'}} }
+      }
+    });
+
+    async function refreshAnoms(){
+      const r = await fetch('/api/anomalies'); const d = await r.json();
+      const ts = d.ts; if (!ts || ts.length===0) return;
+      const flow = d.flow_kg_s.map((v,i)=>({x:ts[i], y:v}));
+      const outs = d.is_outlier.map((flag,i)=> flag ? {x:ts[i], y:d.flow_kg_s[i]} : null).filter(Boolean);
+      anChart.data.datasets[0].data = flow;
+      anChart.data.datasets[1].data = outs;
+      anChart.update('none');
+    }
+    refreshAnoms(); setInterval(refreshAnoms, 7000);
+  </script>
+{% endblock %}

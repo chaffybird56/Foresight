@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>System Health Monitor</title>
+
+    <!-- Bootstrap core -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js (live charts) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1"></script>
+
+    <style>
+      /* Open Color palette (MIT): https://yeun.github.io/open-color/ */
+      :root{
+        --bg: #fafafa;         /* gray-0  */
+        --card: #ffffff;       /* white   */
+        --ink: #1f2937;        /* readable dark (≈ slate-800) */
+        --muted:#6b7280;       /* slate-500 */
+        --teal:#12b886;        /* oc-teal-6 */
+        --teal-1:#e6fcf5;      /* oc-teal-0/1 for badges */
+        --grape:#845ef7;       /* oc-grape-6 */
+        --grape-1:#ece8ff;     /* light grape */
+        --border:#e5e7eb;      /* neutral border */
+      }
+      body { background: var(--bg); color: var(--ink); }
+      .navbar { background:#ffffff; border-bottom:1px solid var(--border); }
+      .navbar .navbar-brand { color: var(--ink); font-weight: 600; }
+      .card { background: var(--card); border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,.04); }
+      .muted { color: var(--muted); }
+      a { color: var(--grape); }
+      a:hover { color:#5b36e3; }
+      .badge-teal { background: var(--teal-1); color: var(--teal); }
+      .badge-grape{ background: var(--grape-1); color: var(--grape); }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar mb-4">
+      <div class="container d-flex justify-content-between">
+        <a class="navbar-brand" href="/">System Health Monitor</a>
+        <div class="d-none d-md-block small">
+          <span class="badge badge-teal rounded-pill px-3 py-2 me-2">Live charts</span>
+          <a class="me-3" href="/plot/last24.png" target="_blank">PNG: Last24</a>
+          <a class="me-3" href="/plot/anomalies.png" target="_blank">PNG: Anomalies</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container mt-5 mb-4">
+      <hr>
+      <div class="muted">Demo app for asset/system health: KPI trending, anomaly surfacing, and reliability insights.</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
