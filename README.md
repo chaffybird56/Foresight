@@ -8,28 +8,35 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
-## Quickstart
+## Quick Start (no Docker)
+
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python scripts/generate_mock_data.py
 python app.py
-# open http://127.0.0.1:5000
+# open http://127.0.0.1:8000
 ```
 
-## Data
-- `data/mock_sensors.csv`: minute-level readings (flow, dp, temp, vibration)
-- `data/events.csv`: outages, work orders, and failures with start/stop times
+## Quick Start (Docker)
 
-## Screens
-- **/ (home)**: KPIs, last 24h trend, open WOs
-- **/anomalies**: outlier timeline and counts
-- **/reliability**: Weibull fit summary
+```bash
+docker build -t shm:latest .
+docker run --rm -p 8000:8000 shm:latest
+# open http://localhost:8000
+```
+
+## What you'll see
+- **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
+- **Anomalies**: Outlier scatter on flow (last 24h)  
+- **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
+
+## Notes
+- Headless plotting enforced via `MPLBACKEND=Agg`.
+- Mock data generator is rerunnable and safe.
 
 ## Disclaimer
 Illustrative use only; integrate with plant PI/Maximo/OSIsoft via appropriate security/governance when adapting for real sites.
-
-
 
 ---
 
@@ -39,7 +46,7 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 - **Spot anomalies** automatically.
 - Estimate reliability with a **Weibull** fit for failure intervals.
 
-## 🧠 How the code achieves it (Technical)
+## 🧠 How the code achieves it 
 - `src/health/kpi.py` computes KPIs from raw time series and events.
 - `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
 - `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
