@@ -8,7 +8,7 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
-## 🏷️ Badges
+## 🏷️ 
 ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4)
 ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet)
 ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
