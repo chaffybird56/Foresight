@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card p-3">
+    <h5 class="mb-2">Reliability — Weibull Probability Plot</h5>
+    <div class="small muted mb-2">A straight line indicates a good Weibull fit; slope = β (shape), intercept → η (scale).</div>
+    <canvas id="weib" height="110"></canvas>
+    <div id="wb-stats" class="small mt-3"></div>
+  </div>
+
+  <script>
+    const cw = document.getElementById('weib').getContext('2d');
+    const wChart = new Chart(cw, {
+      type: 'scatter',
+      data: { datasets: [
+        {label:'data', borderColor:'#845ef7', backgroundColor:'#845ef7', data:[]},
+        {label:'fit',  borderColor:'#12b886', showLine:true, data:[]}
+      ]},
+      options: {
+        scales:{
+          x:{ title:{display:true, text:'ln(time)'} },
+          y:{ title:{display:true, text:'ln(ln(1/(1−F)))'} }
+        }
+      }
+    });
+
+    async function refreshWeib(){
+      const r = await fetch('/api/weibull'); const d = await r.json();
+      const x = d.interval_minutes.sort((a,b)=>a-b).map(v=>Math.log(v));
+      const F = d.F; const y = F.map(Fi => Math.log(Math.log(1/(1-Fi))));
+      const pts = x.map((xi,i)=>({x:xi, y:y[i]}));
+      // Best-fit line y = beta * x + a ; reconstruct using beta and eta
+      const line = [{x: Math.min(...x), y: d.beta*Math.min(...x) + Math.log(1/d.eta**d.beta)},
+                    {x: Math.max(...x), y: d.beta*Math.max(...x) + Math.log(1/d.eta**d.beta)}];
+      wChart.data.datasets[0].data = pts;
+      wChart.data.datasets[1].data = line;
+      wChart.update('none');
+      document.getElementById('wb-stats').textContent =
+        `β (shape) = ${d.beta.toFixed(2)},  η (scale, minutes) ≈ ${d.eta.toFixed(1)}`;
+    }
+    refreshWeib(); setInterval(refreshWeib, 15000);
+  </script>
+{% endblock %}
