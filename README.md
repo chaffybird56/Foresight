@@ -8,6 +8,11 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
+## 🏷️ Badges
+![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4)
+![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet)
+![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
+
 ## Quick Start (no Docker)
 
 ```bash
@@ -30,6 +35,14 @@ docker run --rm -p 8000:8000 shm:latest
 - **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
 - **Anomalies**: Outlier scatter on flow (last 24h)  
 - **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
+
+<img width="1605" height="620" alt="SCR-20251001-puqu" src="https://github.com/user-attachments/assets/1434d019-2707-47bf-9d48-8f78023f3418" />
+
+<img width="1394" height="250" alt="SCR-20251001-pusu" src="https://github.com/user-attachments/assets/6385bc0a-45a0-4be4-90f2-02e2795cef21" />
+
+<img width="1663" height="339" alt="SCR-20251001-puvq" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
+---
+
 Availability — percentage of time the system is “capable” (here: flow above an operability threshold). For example, if the last 7 days contain 10,080 minutes and 9,780 minutes met the threshold, availability ≈ 9,780/10,080 = 97.0%.
 
 Demand failures — count of times the system was demanded but flow was below a safe threshold (we detect “rising edges” of low-flow episodes in the data).
@@ -73,14 +86,6 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 - `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
 - `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
 
-## 🏷️ Badges
-![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4)
-![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet)
-![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
-## 📸 Screenshots
-<img src="outputs_last24.png" width="720" alt="Last-24h trend"/>
-<br>
-<img src="outputs_anomalies.png" width="720" alt="Anomaly view"/>
 
 
