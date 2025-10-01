@@ -6,7 +6,7 @@ A concise, practical example of **system health monitoring** and **reliability a
 - Simple **Weibull** fit for failure-time data to estimate hazard and remaining useful life (RUL)
 - A minimal **Flask** dashboard that renders charts from CSV inputs
 
-> Uses only mock/public data and generic logic—safe for GitHub portfolios.
+> Uses only mock/public data and generic logic
 
 ## Quickstart
 ```bash
