@@ -43,35 +43,46 @@ docker run --rm -p 8000:8000 shm:latest
 <img width="1663" height="339" alt="SCR-20251001-puvq" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
 ---
 
-Availability — percentage of time the system is “capable” (here: flow above an operability threshold). For example, if the last 7 days contain 10,080 minutes and 9,780 minutes met the threshold, availability ≈ 9,780/10,080 = 97.0%.
+## 📊 Metrics & Terminology
 
-Demand failures — count of times the system was demanded but flow was below a safe threshold (we detect “rising edges” of low-flow episodes in the data).
+### Key Performance Indicators
 
-Sensors & units
+**Availability** — Percentage of time the system is "capable" (flow above an operability threshold).
 
-flow_kg_s: flow rate in kilograms per second (proxy for capacity).
+$$\text{Availability} = \frac{\text{Minutes Meeting Threshold}}{\text{Total Minutes}} \times 100\%$$
 
-dp_kPa: differential pressure in kilopascals (hydraulic resistance).
+*Example:* If the last 7 days contain 10,080 minutes and 9,780 minutes met the threshold:
 
-temp_C: temperature in °C (thermal condition).
+$$\text{Availability} \approx \frac{9{,}780}{10{,}080} = 97.0\%$$
 
-vib_mm_s: vibration velocity in mm/s (mechanical health).
+**Demand Failures** — Count of times the system was demanded but flow was below a safe threshold. We detect "rising edges" of low-flow episodes in the data.
 
-Weibull fit — reliability engineers often model the distribution of times between failures with a Weibull distribution; a straight line on a Weibull probability plot implies a good fit. The slope is β (beta):
+---
 
-β < 1 → early/infant mortality (decreasing hazard),
+### Sensor Parameters & Units
 
-β ≈ 1 → random failures (constant hazard),
+| Sensor | Unit | Description |
+|--------|------|-------------|
+| `flow_kg_s` | kg/s | Flow rate (proxy for capacity) |
+| `dp_kPa` | kPa | Differential pressure (hydraulic resistance) |
+| `temp_C` | °C | Temperature (thermal condition) |
+| `vib_mm_s` | mm/s | Vibration velocity (mechanical health) |
 
-β > 1 → wear-out (increasing hazard).
-The scale η (eta) is a characteristic life parameter (where ~63.2% of a population has failed).
+---
 
-## Notes
-- Headless plotting enforced via `MPLBACKEND=Agg`.
-- Mock data generator is rerunnable and safe.
+### Weibull Reliability Analysis
 
-## Disclaimer
-Illustrative use only; integrate with plant PI/Maximo/OSIsoft via appropriate security/governance when adapting for real sites.
+Reliability engineers often model the distribution of times between failures with a **Weibull distribution**. A straight line on a Weibull probability plot implies a good fit.
+
+**Shape Parameter** $\beta$ **(beta):**
+- $\beta < 1$ → Early/infant mortality (decreasing hazard rate)
+- $\beta \approx 1$ → Random failures (constant hazard rate)
+- $\beta > 1$ → Wear-out (increasing hazard rate)
+
+**Scale Parameter** $\eta$ **(eta):**  
+Characteristic life parameter where approximately 63.2% of the population has failed:
+
+$$P(T \leq \eta) \approx 0.632$$
 
 ---
 
