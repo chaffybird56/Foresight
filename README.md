@@ -1,4 +1,5 @@
 # System Health Monitor (Nuclear/Power Systems)
+## 🏷️ ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4) ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet) ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
 A concise, practical example of **system health monitoring** and **reliability analytics** for a balance‑of‑plant system (e.g., Service Water, Condenser Cooling). It demonstrates:
 - KPI trending (availability, demand failures, maintenance deferrals)
@@ -8,10 +9,6 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
-## 🏷️ 
-![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4)
-![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet)
-![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
 ## Quick Start (no Docker)
 
