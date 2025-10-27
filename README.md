@@ -9,6 +9,17 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
+## What you'll see
+- **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
+- **Anomalies**: Outlier scatter on flow (last 24h)  
+- **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
+
+<img width="1605" height="620" alt="SCR-20251001-puqu" src="https://github.com/user-attachments/assets/1434d019-2707-47bf-9d48-8f78023f3418" />
+
+<img width="1394" height="250" alt="SCR-20251001-pusu" src="https://github.com/user-attachments/assets/6385bc0a-45a0-4be4-90f2-02e2795cef21" />
+
+<img width="1663" height="339" alt="SCR-20251001-puvq" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
+---
 
 ## Quick Start (no Docker)
 
@@ -27,19 +38,6 @@ docker build -t shm:latest .
 docker run --rm -p 8000:8000 shm:latest
 # open http://localhost:8000
 ```
-
-## What you'll see
-- **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
-- **Anomalies**: Outlier scatter on flow (last 24h)  
-- **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
-
-<img width="1605" height="620" alt="SCR-20251001-puqu" src="https://github.com/user-attachments/assets/1434d019-2707-47bf-9d48-8f78023f3418" />
-
-<img width="1394" height="250" alt="SCR-20251001-pusu" src="https://github.com/user-attachments/assets/6385bc0a-45a0-4be4-90f2-02e2795cef21" />
-
-<img width="1663" height="339" alt="SCR-20251001-puvq" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
----
-
 ## 📊 Metrics & Terminology
 
 ### Key Performance Indicators
