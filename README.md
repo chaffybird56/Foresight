@@ -9,6 +9,18 @@ A concise, practical example of **system health monitoring** and **reliability a
 
 > Uses only mock/public data and generic logic
 
+## 👀 At a glance 
+We “listen” to a plant system (flow, pressure, temperature, vibration) and:
+- Show health **KPIs** (availability, demand failures, open work orders).
+- **Spot anomalies** automatically.
+- Estimate reliability with a **Weibull** fit for failure intervals.
+
+## 🧠 How the code achieves it 
+- `src/health/kpi.py` computes KPIs from raw time series and events.
+- `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
+- `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
+
+
 ## What you'll see
 - **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
 - **Anomalies**: Outlier scatter on flow (last 24h)  
@@ -80,18 +92,4 @@ Characteristic life parameter where approximately 63.2% of the population has fa
 $$P(T \leq \eta) \approx 0.632$$
 
 ---
-
-## 👀 At a glance (Simple)
-We “listen” to a plant system (flow, pressure, temperature, vibration) and:
-- Show health **KPIs** (availability, demand failures, open work orders).
-- **Spot anomalies** automatically.
-- Estimate reliability with a **Weibull** fit for failure intervals.
-
-## 🧠 How the code achieves it 
-- `src/health/kpi.py` computes KPIs from raw time series and events.
-- `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
-- `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
-
-
-
 
