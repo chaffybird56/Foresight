@@ -10,6 +10,7 @@ from pathlib import Path
 
 from src.health.kpi import compute_kpis
 from src.health.anomaly import detect_anomalies
+from src.health.traceability import FRAMEWORKS, build_traceable_recommendations
 
 app = Flask(__name__)
 
@@ -23,6 +24,14 @@ def load_data():
     df_s = pd.read_csv(SENSORS_CSV, parse_dates=["ts"])
     df_e = pd.read_csv(EVENTS_CSV,  parse_dates=["start","end"], infer_datetime_format=True)
     return df_s, df_e
+
+
+def _last24_anomaly_stats(df_s: pd.DataFrame) -> tuple[int, int]:
+    dfa = detect_anomalies(df_s)
+    end = dfa["ts"].max()
+    start = end - pd.Timedelta("24h")
+    window = dfa[dfa["ts"].between(start, end)]
+    return int(window["is_outlier"].sum()), int(len(window))
 
 # ------------------ Pages ------------------
 @app.route("/")
@@ -40,11 +49,37 @@ def anomalies_page():
 def reliability_page():
     return render_template("reliability.html")
 
+
+@app.route("/governance")
+def governance_page():
+    return render_template("governance.html", frameworks=FRAMEWORKS)
+
 # ------------------ JSON APIs (for live charts) ------------------
 @app.route("/api/kpis")
 def api_kpis():
     df_s, df_e = load_data()
     return jsonify(compute_kpis(df_s, df_e))
+
+
+@app.route("/api/recommendations")
+def api_recommendations():
+    df_s, df_e = load_data()
+    kpi = compute_kpis(df_s, df_e)
+    out_n, out_samples = _last24_anomaly_stats(df_s)
+    recs = build_traceable_recommendations(
+        kpi["availability_pct"],
+        kpi["demand_failures"],
+        kpi["open_work_orders"],
+        out_n,
+        out_samples,
+    )
+    return jsonify(
+        {
+            "recommendations": recs,
+            "kpis": kpi,
+            "anomaly_window": {"outliers_24h": out_n, "samples_24h": out_samples},
+        }
+    )
 
 @app.route("/api/last24")
 def api_last24():

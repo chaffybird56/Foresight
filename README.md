@@ -1,17 +1,16 @@
 # System Health Monitor (Nuclear/Power Systems)
 
+## 🏷️ ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4) ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet) ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
+
 - Built equipment health monitoring application highlighting trends for preventative maintenance and reliability decisions on nuclear and power plant signals.
 - Explored predictive-maintenance with traceable recommendations, referencing Canadian Electrical Code (C22.1), CSA Z460/Z462 and Canada Labour Code safety themes, and ISO 9001-oriented quality assurance for nuclear and industrial installations.
 - Implemented Python-based analytics and anomaly detection to flag emerging equipment issues before they affect operations.
-
-**Repository:** [https://github.com/chaffybird56/Foresight](https://github.com/chaffybird56/Foresight)
-
-## 🏷️ ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4) ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet) ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
 A concise, practical example of **system health monitoring** and **reliability analytics** for a balance‑of‑plant system (e.g., Service Water, Condenser Cooling). It demonstrates:
 - KPI trending (availability, demand failures, maintenance deferrals)
 - **Anomaly detection** on sensor time‑series (Isolation Forest)
 - Simple **Weibull** fit for failure-time data to estimate hazard and remaining useful life (RUL)
+- **Traceable PM recommendations** from live state, cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001-oriented QA themes (`/governance`, `src/health/traceability.py`)
 - A minimal **Flask** dashboard that renders charts from CSV inputs
 
 > Uses only mock/public data and generic logic
@@ -25,6 +24,7 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 ## 🧠 How the code achieves it 
 - `src/health/kpi.py` computes KPIs from raw time series and events.
 - `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
+- `src/health/traceability.py` maps live KPI and anomaly context to trace IDs with actions cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001-oriented themes.
 - `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
 
 
@@ -32,6 +32,7 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 - **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
 - **Anomalies**: Outlier scatter on flow (last 24h)  
 - **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
+- **PM & standards** (`/governance`): Traceable preventive-maintenance recommendations from current data, with framework table and `/api/recommendations` JSON for integration demos
 
 <img width="1605" height="620" alt="SCR-20251001-puqu" src="https://github.com/user-attachments/assets/1434d019-2707-47bf-9d48-8f78023f3418" />
 
