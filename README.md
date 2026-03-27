@@ -26,15 +26,6 @@ We treat the plant like a single system we “listen” to (flow, pressure, temp
 - **Flags anomalies** automatically on the sensor streams.
 - Estimates **reliability** with a **Weibull** fit on failure intervals.
 
-## What you’ll see
-
-| Screen | Description |
-|--------|-------------|
-| **Home** | KPI cards (availability, demand failures, open work orders) and a **last 24 hours** trend chart for all four sensors. |
-| **Anomalies** | Flow over the last 24 hours with outlier points highlighted from the isolation-forest model. |
-| **Reliability** | Weibull probability–style plot with a line fit (uses mock spacing if failure data are sparse). |
-| **Preventive maintenance & standards** (`/governance`) | Reference table for the cited standards plus **live traceable recommendations** from current data; JSON at `/api/recommendations` for integrations. |
-
 ## Screenshots (running app)
 
 **Home — KPIs and last 24h trend**  
@@ -51,6 +42,15 @@ Flow signal for the last 24 hours with outlier samples marked so you can see whe
 Empirical failure spacing vs. fitted Weibull line in transformed coordinates (shape/scale summarized on the chart).
 
 <img width="1663" height="339" alt="Reliability view: Weibull probability plot with fit" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
+
+## What you’ll see
+
+| Screen | Description |
+|--------|-------------|
+| **Home** | KPI cards (availability, demand failures, open work orders) and a **last 24 hours** trend chart for all four sensors. |
+| **Anomalies** | Flow over the last 24 hours with outlier points highlighted from the isolation-forest model. |
+| **Reliability** | Weibull probability–style plot with a line fit (uses mock spacing if failure data are sparse). |
+| **Preventive maintenance & standards** (`/governance`) | Reference table for the cited standards plus **live traceable recommendations** from current data; JSON at `/api/recommendations` for integrations. |
 
 ## 🧠 How the code achieves it
 
