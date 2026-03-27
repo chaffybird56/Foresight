@@ -1,6 +1,6 @@
 # PM recommendations & standards reference
 
-This file is the **normative companion** to the high-level themes shown in the app (`/governance`) and in [`src/health/traceability.py`](../src/health/traceability.py). It explains **what is actually required or described** in each cited instrument, and how the demo maps **conceptually**—without claiming certification, legal compliance, or that any particular KPI threshold appears in a standard.
+This file is the **normative companion** to the high-level themes shown in the app (`/governance`) and in [`src/health/traceability.py`](../src/health/traceability.py). It explains **what is actually required or described** in each cited instrument, and how the demo maps **conceptually**—without claiming certification, legal compliance, or that any particular KPI threshold appears in a standard. For **KPI formulas and sensor definitions**, see [METRICS_AND_TERMINOLOGY.md](METRICS_AND_TERMINOLOGY.md).
 
 **Disclaimer:** This is not legal, engineering, or compliance advice. Standards are **copyright** and **edition-specific**; always use the official text purchased from the publisher or accessed under licence. Statutory text below from public law sources is cited for accuracy as of the retrieval date noted.
 
