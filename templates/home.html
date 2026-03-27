@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+  <div class="card p-3 mb-4 border-start border-4" style="border-color: var(--teal) !important;">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+      <div>
+        <h1 class="h5 mb-1">Equipment health &amp; preventive maintenance</h1>
+        <p class="small muted mb-0">
+          KPI trends, isolation-forest anomalies, and Weibull-style reliability support decisions on nuclear and power-plant style signals.
+          <a href="/governance">Traceable PM recommendations</a> tie alerts to CSA C22.1, Z460/Z462, Canada Labour Code (Part&nbsp;II), and ISO&nbsp;9001-oriented themes.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div class="row g-4">
     <div class="col-md-4">
       <div class="card p-3">
@@ -27,13 +39,12 @@
   <div class="card p-3 mt-4">
     <div class="d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Last 24h Trend</h5>
-      <div class="small"><a href="/anomalies">Anomalies</a> · <a href="/reliability">Reliability</a></div>
+      <div class="small"><a href="/anomalies">Anomalies</a> · <a href="/reliability">Reliability</a> · <a href="/governance">PM &amp; standards</a></div>
     </div>
     <canvas id="chart24" height="110"></canvas>
   </div>
 
   <script>
-    // Chart.js config (time scale) per docs. :contentReference[oaicite:5]{index=5}
     const ctx = document.getElementById('chart24').getContext('2d');
     const colors = {
       flow:  'rgba(18,184,134,0.9)',   // teal

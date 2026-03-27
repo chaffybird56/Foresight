@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="h4 mb-2">Preventive maintenance &amp; standards traceability</h1>
+  <p class="muted small mb-4">
+    Live KPIs and 24h anomaly density drive trace IDs below. Mapping references
+    <strong>CSA C22.1</strong>, <strong>CSA Z460</strong>/<strong>Z462</strong>,
+    <strong>Canada Labour Code, Part&nbsp;II</strong>, and <strong>ISO&nbsp;9001</strong>-oriented QA themes—illustrative only, not a compliance determination.
+  </p>
+
+  <div class="card p-3 mb-4">
+    <h2 class="h6 text-uppercase muted">Reference frameworks</h2>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr><th scope="col">Code</th><th scope="col">Title</th><th scope="col">Theme in this demo</th></tr>
+        </thead>
+        <tbody>
+          {% for f in frameworks %}
+            <tr>
+              <td class="text-nowrap"><strong>{{ f.code }}</strong></td>
+              <td>{{ f.name }}</td>
+              <td class="small">{{ f.theme }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+    <h2 class="h6 text-uppercase muted mb-0">Traceable recommendations</h2>
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="rec-refresh">Refresh</button>
+  </div>
+  <div id="rec-context" class="small muted mb-3"></div>
+  <div id="rec-root" class="vstack gap-3"></div>
+
+  <script>
+    async function loadRecs() {
+      const r = await fetch('/api/recommendations');
+      const d = await r.json();
+      const ctx = document.getElementById('rec-context');
+      ctx.textContent = `Context: availability ${d.kpis.availability_pct}% · demand failures (7d) ${d.kpis.demand_failures} · open WOs ${d.kpis.open_work_orders} · outliers last 24h ${d.anomaly_window.outliers_24h} / ${d.anomaly_window.samples_24h} samples`;
+      const root = document.getElementById('rec-root');
+      root.replaceChildren();
+      for (const rec of d.recommendations) {
+        const card = document.createElement('div');
+        card.className = 'card p-3';
+        const refs = (rec.standard_refs || []).map(
+          (ref) => `<span class="badge badge-grape rounded-pill me-1 mb-1">${ref.code}</span>`
+        ).join('');
+        const refDetails = (rec.standard_refs || [])
+          .map((ref) => `<div class="mt-1"><strong>${ref.code}</strong> — ${ref.theme}</div>`)
+          .join('');
+        card.innerHTML = `
+          <div class="mb-2"><span class="badge badge-teal rounded-pill">${rec.trace_id}</span></div>
+          <h3 class="h6">${rec.title}</h3>
+          <p class="small mb-2">${rec.rationale}</p>
+          <p class="small fw-semibold mb-1">Suggested actions</p>
+          <ul class="small mb-3">${rec.actions.map((a) => `<li>${a}</li>`).join('')}</ul>
+          <p class="small fw-semibold mb-1">Standard cross-references</p>
+          <div class="mb-2">${refs}</div>
+          <div class="small text-muted">${refDetails}</div>`;
+        root.appendChild(card);
+      }
+    }
+    document.getElementById('rec-refresh').addEventListener('click', loadRecs);
+    loadRecs();
+    setInterval(loadRecs, 15000);
+  </script>
+{% endblock %}

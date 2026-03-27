@@ -39,12 +39,19 @@
   </head>
   <body>
     <nav class="navbar mb-4">
-      <div class="container d-flex justify-content-between">
-        <a class="navbar-brand" href="/">System Health Monitor</a>
-        <div class="d-none d-md-block small">
-          <span class="badge badge-teal rounded-pill px-3 py-2 me-2">Live charts</span>
-          <a class="me-3" href="/plot/last24.png" target="_blank">PNG: Last24</a>
-          <a class="me-3" href="/plot/anomalies.png" target="_blank">PNG: Anomalies</a>
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 py-2">
+          <a class="navbar-brand mb-0" href="/">System Health Monitor</a>
+          <div class="d-flex flex-wrap align-items-center gap-3 small">
+            <a href="/">Home</a>
+            <a href="/anomalies">Anomalies</a>
+            <a href="/reliability">Reliability</a>
+            <a href="/governance">PM &amp; standards</a>
+            <span class="d-none d-md-inline text-muted">|</span>
+            <span class="badge badge-teal rounded-pill px-3 py-2 d-none d-md-inline">Live charts</span>
+            <a class="d-none d-md-inline" href="/plot/last24.png" target="_blank">PNG: Last24</a>
+            <a class="d-none d-md-inline" href="/plot/anomalies.png" target="_blank">PNG: Anomalies</a>
+          </div>
         </div>
       </div>
     </nav>
