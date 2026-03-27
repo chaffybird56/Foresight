@@ -6,6 +6,8 @@
 - Explored predictive-maintenance with traceable recommendations, referencing Canadian Electrical Code (C22.1), CSA Z460/Z462 and Canada Labour Code safety themes, and ISO 9001-oriented quality assurance for nuclear and industrial installations.
 - Implemented Python-based analytics and anomaly detection to flag emerging equipment issues before they affect operations.
 
+**Standards companion (verified citations):** [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md) — ISO 9001:2015 clause titles, verbatim *Canada Labour Code* excerpts from the official consolidation, and CSA scope notes with sources. Use it alongside the in-app `/governance` view.
+
 A concise, practical example of **system health monitoring** and **reliability analytics** for a balance‑of‑plant system (e.g., Service Water, Condenser Cooling). It demonstrates:
 - KPI trending (availability, demand failures, maintenance deferrals)
 - **Anomaly detection** on sensor time‑series (Isolation Forest)
@@ -24,7 +26,7 @@ We “listen” to a plant system (flow, pressure, temperature, vibration) and:
 ## 🧠 How the code achieves it 
 - `src/health/kpi.py` computes KPIs from raw time series and events.
 - `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
-- `src/health/traceability.py` maps live KPI and anomaly context to trace IDs with actions cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001-oriented themes.
+- `src/health/traceability.py` maps live KPI and anomaly context to trace IDs with actions cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001:2015 clauses (see [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md)).
 - `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
 
 

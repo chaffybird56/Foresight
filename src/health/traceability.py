@@ -3,6 +3,9 @@ Traceable predictive-maintenance recommendations mapped to Canadian and ISO them
 
 Illustrative only: not legal advice or a compliance attestation. Supports audit-style
 trace IDs from live KPI and anomaly state.
+
+Verified clause titles, statutory quotes, and mapping rationale:
+see repository file docs/PM_STANDARDS_REFERENCE.md
 """
 from __future__ import annotations
 
@@ -12,28 +15,28 @@ from typing import Any
 FRAMEWORKS: list[dict[str, str]] = [
     {
         "code": "CSA C22.1",
-        "name": "Canadian Electrical Code, Part I",
-        "theme": "Electrical installation and equipment integrity for instrument, control, and power circuits supporting monitored plant loads.",
+        "name": "Canadian Electrical Code, Part I — Safety Standard for Electrical Installations",
+        "theme": "National installation rules for electrical equipment and conductors (edition-specific). Referenced when work may affect installations or utilization equipment—not a substitute for the Code text.",
     },
     {
         "code": "CSA Z460",
-        "name": "Control of hazardous energy (lockout)",
-        "theme": "Procedures and verification before equipment is returned to service after maintenance or abnormal conditions.",
+        "name": "Control of hazardous energy — Lockout and other methods",
+        "theme": "Published scope covers lockout and other methods for maintenance, inspection, servicing, etc., where hazardous energy exists (confirm edition in force).",
     },
     {
         "code": "CSA Z462",
         "name": "Workplace electrical safety",
-        "theme": "Risk assessment, safe work practices, and PPE when electrical equipment is accessed for inspection or repair.",
+        "theme": "Workplace electrical safety requirements (e.g. risk assessment, safe work practices, PPE) for work on or near electrical equipment.",
     },
     {
         "code": "Canada Labour Code, Part II",
-        "name": "Occupational health and safety (federal)",
-        "theme": "Employer duties: hazard identification, investigation of dangerous occurrences, and preventive measures.",
+        "name": "Occupational health and safety (federal employers)",
+        "theme": "Employer duties in s. 125 include investigation of hazardous occurrences (s. 125(1)(c)), safe machinery/equipment (s. 125(1)(t)), and electrical equipment (s. 125(1)(m)(iii))—see verbatim excerpts in docs/PM_STANDARDS_REFERENCE.md.",
     },
     {
-        "code": "ISO 9001",
-        "name": "Quality management systems (themes)",
-        "theme": "Documented operational controls, monitoring and measurement, nonconformity and corrective action (e.g. Clauses 8.5, 8.7, 9.1).",
+        "code": "ISO 9001:2015",
+        "name": "Quality management systems — Requirements",
+        "theme": "Clause titles used in mapping: 8.5.1 Control of production and service provision; 8.7 Control of nonconforming outputs; 9.1 Monitoring, measurement, analysis and evaluation (confirm against your normative copy).",
     },
 ]
 
@@ -72,7 +75,7 @@ def build_traceable_recommendations(
                     "Trend demand vs. capacity; schedule inspection of pumps, valves, and strainers.",
                     "Record findings in the work management system with cause codes for trending.",
                 ],
-                "standard_refs": _refs("ISO 9001", "Canada Labour Code, Part II"),
+                "standard_refs": _refs("ISO 9001:2015", "Canada Labour Code, Part II"),
             }
         )
 
@@ -100,7 +103,7 @@ def build_traceable_recommendations(
                     "Prioritize WOs affecting safety-related or production-critical paths.",
                     "Ensure deferral rationale and approvals are documented for QA traceability.",
                 ],
-                "standard_refs": _refs("ISO 9001", "CSA Z460"),
+                "standard_refs": _refs("ISO 9001:2015", "CSA Z460"),
             }
         )
 
@@ -114,7 +117,7 @@ def build_traceable_recommendations(
                     "Correlate outliers with vibration, ΔP, and temperature; schedule targeted inspection.",
                     "If electrical enclosure or motor work is required, apply Z462 work practices.",
                 ],
-                "standard_refs": _refs("CSA Z462", "CSA C22.1", "ISO 9001"),
+                "standard_refs": _refs("CSA Z462", "CSA C22.1", "ISO 9001:2015"),
             }
         )
     elif outliers_last_24h > 0:
@@ -127,7 +130,7 @@ def build_traceable_recommendations(
                     "Review calibration records and signal quality flags.",
                     "Retain anomaly timestamps for post-event review (measurement traceability).",
                 ],
-                "standard_refs": _refs("ISO 9001", "Canada Labour Code, Part II"),
+                "standard_refs": _refs("ISO 9001:2015", "Canada Labour Code, Part II"),
             }
         )
 
@@ -141,7 +144,7 @@ def build_traceable_recommendations(
                     "Maintain preventive maintenance intervals per plant program.",
                     "Periodically re-validate Isolation Forest contamination and thresholds against operating experience.",
                 ],
-                "standard_refs": _refs("ISO 9001", "CSA Z460"),
+                "standard_refs": _refs("ISO 9001:2015", "CSA Z460"),
             }
         )
 
