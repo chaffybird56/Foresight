@@ -2,39 +2,30 @@
 
 ## 🏷️ ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4) ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet) ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
-- Built equipment health monitoring application highlighting trends for preventative maintenance and reliability decisions on nuclear and power plant signals.
-- Explored predictive-maintenance with traceable recommendations, referencing Canadian Electrical Code (C22.1), CSA Z460/Z462 and Canada Labour Code safety themes, and ISO 9001-oriented quality assurance for nuclear and industrial installations.
-- Implemented Python-based analytics and anomaly detection to flag emerging equipment issues before they affect operations.
+- **Health monitoring** for balance-of-plant style signals (preventive maintenance & reliability)—KPIs, isolation-forest anomalies, Weibull-style reliability, and a Flask UI over CSV data.
+- **Traceable PM** recommendations and standards cross-references (C22.1, CSA Z460/Z462, Canada Labour Code Part II, ISO 9001:2015)—see [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md) and in-app **`/governance`**.
 
-**Standards companion (verified citations):** [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md) — ISO 9001:2015 clause titles, verbatim *Canada Labour Code* excerpts from the official consolidation, and CSA scope notes with sources. Use it alongside the in-app `/governance` view.
+**More detail:** [Standards & citations](docs/PM_STANDARDS_REFERENCE.md) · [KPIs, sensors & Weibull math](docs/METRICS_AND_TERMINOLOGY.md)
 
-A concise, practical example of **system health monitoring** and **reliability analytics** for a balance‑of‑plant system (e.g., Service Water, Condenser Cooling). It demonstrates:
-- KPI trending (availability, demand failures, maintenance deferrals)
-- **Anomaly detection** on sensor time‑series (Isolation Forest)
-- Simple **Weibull** fit for failure-time data to estimate hazard and remaining useful life (RUL)
-- **Traceable PM recommendations** from live state, cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001-oriented QA themes (`/governance`, `src/health/traceability.py`)
-- A minimal **Flask** dashboard that renders charts from CSV inputs
+> Mock/public data only; generic logic for demos.
 
-> Uses only mock/public data and generic logic
+## What it does
 
-## 👀 At a glance 
-We “listen” to a plant system (flow, pressure, temperature, vibration) and:
-- Show health **KPIs** (availability, demand failures, open work orders).
-- **Spot anomalies** automatically.
-- Estimate reliability with a **Weibull** fit for failure intervals.
+| Area | Implementation |
+|------|------------------|
+| KPIs | `src/health/kpi.py` |
+| Anomalies | `src/health/anomaly.py` (Isolation Forest) |
+| PM trace IDs | `src/health/traceability.py` → `/governance`, `/api/recommendations` |
+| Charts & Weibull | `app.py` |
 
-## 🧠 How the code achieves it 
-- `src/health/kpi.py` computes KPIs from raw time series and events.
-- `src/health/anomaly.py` runs an Isolation Forest across multiple sensors to flag outliers.
-- `src/health/traceability.py` maps live KPI and anomaly context to trace IDs with actions cross-referenced to CSA C22.1, Z460/Z462, Canada Labour Code (Part II), and ISO 9001:2015 clauses (see [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md)).
-- `app.py` serves charts (Flask). A small Weibull fit estimates shape/scale from inter-failure times.
+## Routes
 
-
-## What you'll see
-- **Home**: KPI cards (Availability, Demand Failures, Open WOs) + Last-24h chart  
-- **Anomalies**: Outlier scatter on flow (last 24h)  
-- **Reliability**: Weibull probability plot with fit (mock fallback if data sparse)
-- **PM & standards** (`/governance`): Traceable preventive-maintenance recommendations from current data, with framework table and `/api/recommendations` JSON for integration demos
+| Page | What you get |
+|------|----------------|
+| **Home** | KPI cards, last-24h trend |
+| **Anomalies** | Flow + outliers (24h) |
+| **Reliability** | Weibull probability plot (mock fallback if sparse) |
+| **PM & standards** | Framework table + live recommendations |
 
 <img width="1605" height="620" alt="SCR-20251001-puqu" src="https://github.com/user-attachments/assets/1434d019-2707-47bf-9d48-8f78023f3418" />
 
@@ -60,46 +51,3 @@ docker build -t shm:latest .
 docker run --rm -p 8000:8000 shm:latest
 # open http://localhost:8000
 ```
-## 📊 Metrics & Terminology
-
-### Key Performance Indicators
-
-**Availability** — Percentage of time the system is "capable" (flow above an operability threshold).
-
-$$\text{Availability} = \frac{\text{Minutes Meeting Threshold}}{\text{Total Minutes}} \times 100\%$$
-
-*Example:* If the last 7 days contain 10,080 minutes and 9,780 minutes met the threshold:
-
-$$\text{Availability} \approx \frac{9{,}780}{10{,}080} = 97.0\%$$
-
-**Demand Failures** — Count of times the system was demanded but flow was below a safe threshold. We detect "rising edges" of low-flow episodes in the data.
-
----
-
-### Sensor Parameters & Units
-
-| Sensor | Unit | Description |
-|--------|------|-------------|
-| `flow_kg_s` | kg/s | Flow rate (proxy for capacity) |
-| `dp_kPa` | kPa | Differential pressure (hydraulic resistance) |
-| `temp_C` | °C | Temperature (thermal condition) |
-| `vib_mm_s` | mm/s | Vibration velocity (mechanical health) |
-
----
-
-### Weibull Reliability Analysis
-
-Reliability engineers often model the distribution of times between failures with a **Weibull distribution**. A straight line on a Weibull probability plot implies a good fit.
-
-**Shape Parameter** $\beta$ **(beta):**
-- $\beta < 1$ → Early/infant mortality (decreasing hazard rate)
-- $\beta \approx 1$ → Random failures (constant hazard rate)
-- $\beta > 1$ → Wear-out (increasing hazard rate)
-
-**Scale Parameter** $\eta$ **(eta):**  
-Characteristic life parameter where approximately 63.2% of the population has failed:
-
-$$P(T \leq \eta) \approx 0.632$$
-
----
-
