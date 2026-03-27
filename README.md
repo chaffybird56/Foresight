@@ -26,13 +26,6 @@ We treat the plant like a single system we “listen” to (flow, pressure, temp
 - **Flags anomalies** automatically on the sensor streams.
 - Estimates **reliability** with a **Weibull** fit on failure intervals.
 
-## 🧠 How the code achieves it
-
-- [`src/health/kpi.py`](src/health/kpi.py) computes KPIs from raw time series and events.
-- [`src/health/anomaly.py`](src/health/anomaly.py) runs an Isolation Forest across multiple sensors to flag outliers.
-- [`src/health/traceability.py`](src/health/traceability.py) maps live KPI and anomaly context to trace IDs with suggested actions; standards mapping is explained in [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md).
-- [`app.py`](app.py) serves the Flask UI, Chart.js endpoints, static plots, and the Weibull fit for the reliability view.
-
 ## What you’ll see
 
 | Screen | Description |
@@ -58,6 +51,13 @@ Flow signal for the last 24 hours with outlier samples marked so you can see whe
 Empirical failure spacing vs. fitted Weibull line in transformed coordinates (shape/scale summarized on the chart).
 
 <img width="1663" height="339" alt="Reliability view: Weibull probability plot with fit" src="https://github.com/user-attachments/assets/eca28272-925d-4edd-8110-4a3414849047" />
+
+## 🧠 How the code achieves it
+
+- [`src/health/kpi.py`](src/health/kpi.py) computes KPIs from raw time series and events.
+- [`src/health/anomaly.py`](src/health/anomaly.py) runs an Isolation Forest across multiple sensors to flag outliers.
+- [`src/health/traceability.py`](src/health/traceability.py) maps live KPI and anomaly context to trace IDs with suggested actions; standards mapping is explained in [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md).
+- [`app.py`](app.py) serves the Flask UI, Chart.js endpoints, static plots, and the Weibull fit for the reliability view.
 
 ---
 
