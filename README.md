@@ -1,4 +1,11 @@
 # System Health Monitor (Nuclear/Power Systems)
+
+- Built equipment health monitoring application highlighting trends for preventative maintenance and reliability decisions on nuclear and power plant signals.
+- Explored predictive-maintenance with traceable recommendations, referencing Canadian Electrical Code (C22.1), CSA Z460/Z462 and Canada Labour Code safety themes, and ISO 9001-oriented quality assurance for nuclear and industrial installations.
+- Implemented Python-based analytics and anomaly detection to flag emerging equipment issues before they affect operations.
+
+**Repository:** [https://github.com/chaffybird56/Foresight](https://github.com/chaffybird56/Foresight)
+
 ## 🏷️ ![Flask App](https://img.shields.io/badge/Flask-Server-ff69b4) ![ML: IsolationForest](https://img.shields.io/badge/ML-IsolationForest-blueviolet) ![Reliability: Weibull](https://img.shields.io/badge/Reliability-Weibull-green)
 
 A concise, practical example of **system health monitoring** and **reliability analytics** for a balance‑of‑plant system (e.g., Service Water, Condenser Cooling). It demonstrates:
