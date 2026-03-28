@@ -11,6 +11,7 @@ from pathlib import Path
 from src.health.kpi import compute_kpis
 from src.health.anomaly import detect_anomalies
 from src.health.traceability import FRAMEWORKS, build_traceable_recommendations
+from src.health.opex_strategy import build_opex_informed_strategy, fit_weibull_shape_eta
 
 app = Flask(__name__)
 
@@ -73,9 +74,21 @@ def api_recommendations():
         out_n,
         out_samples,
     )
+    w_beta, w_eta = fit_weibull_shape_eta(df_e)
+    opex = build_opex_informed_strategy(
+        kpi["availability_pct"],
+        kpi["demand_failures"],
+        kpi["open_work_orders"],
+        out_n,
+        out_samples,
+        w_beta,
+        w_eta,
+    )
     return jsonify(
         {
             "recommendations": recs,
+            "opex_strategy": opex,
+            "weibull_fit": {"beta": w_beta, "eta_minutes": w_eta},
             "kpis": kpi,
             "anomaly_window": {"outliers_24h": out_n, "samples_24h": out_samples},
         }
