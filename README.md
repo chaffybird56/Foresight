@@ -4,6 +4,7 @@
 
 - Built an equipment health monitoring application that highlights trends for **preventive maintenance** and **reliability** decisions on nuclear and power-plant style signals (flow, pressure, temperature, vibration).
 - Explored **predictive maintenance** with **traceable recommendations** tied to Canadian Electrical Code (C22.1), CSA Z460/Z462, Canada Labour Code safety themes, and ISO 9001–oriented quality assurance—documented in [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md) and shown in-app under **`/governance`**.
+- Explored predictive-maintenance **scenarios informed by operating expenditure (OPEX)**—turning analysis output into recommendations for **asset strategy** and **inspection focus** ([`src/health/opex_strategy.py`](src/health/opex_strategy.py), same `/governance` view and `/api/recommendations` payload).
 - Implemented **Python** analytics and **anomaly detection** (Isolation Forest) so emerging equipment issues surface before they affect operations.
 
 **Extra detail (optional reads):** [Standards & verified citations](docs/PM_STANDARDS_REFERENCE.md) · [KPI definitions, sensors, Weibull formulas](docs/METRICS_AND_TERMINOLOGY.md)
@@ -14,6 +15,7 @@ A concise, practical example of **system health monitoring** and **reliability a
 - **Anomaly detection** on sensor time series (Isolation Forest)
 - A simple **Weibull** fit on failure-time data to estimate hazard and remaining useful life (RUL)
 - **Traceable preventive maintenance recommendations** from live state, with standards cross-references (`/governance`, [`src/health/traceability.py`](src/health/traceability.py))
+- **OPEX-informed scenarios** (planned spend vs. unplanned-outage risk) for asset strategy and inspection emphasis ([`src/health/opex_strategy.py`](src/health/opex_strategy.py))
 - A minimal **Flask** dashboard that renders charts from CSV inputs
 
 > Uses only mock/public data and generic logic.
@@ -25,6 +27,7 @@ We treat the plant like a single system we “listen” to (flow, pressure, temp
 - Shows health **KPIs**: availability, demand failures, and open work orders.
 - **Flags anomalies** automatically on the sensor streams.
 - Estimates **reliability** with a **Weibull** fit on failure intervals.
+- On **`/governance`**, turns that analysis into **OPEX-aware** suggestions (where to focus inspections and how to think about asset strategy under operating-spend vs. outage-risk trade-offs), alongside standards-traceable preventive maintenance items.
 
 ## Screenshots (running app)
 
@@ -50,13 +53,14 @@ Empirical failure spacing vs. fitted Weibull line in transformed coordinates (sh
 | **Home** | KPI cards (availability, demand failures, open work orders) and a **last 24 hours** trend chart for all four sensors. |
 | **Anomalies** | Flow over the last 24 hours with outlier points highlighted from the isolation-forest model. |
 | **Reliability** | Weibull probability–style plot with a line fit (uses mock spacing if failure data are sparse). |
-| **Preventive maintenance & standards** (`/governance`) | Reference table for the cited standards plus **live traceable recommendations** from current data; JSON at `/api/recommendations` for integrations. |
+| **Preventive maintenance & standards** (`/governance`) | Standards reference table, **OPEX-informed** asset strategy and inspection-focus scenarios from KPIs/anomalies/Weibull (see below), plus **traceable** preventive-maintenance items; JSON at `/api/recommendations` (`opex_strategy` + `recommendations`). |
 
 ## 🧠 How the code achieves it
 
 - [`src/health/kpi.py`](src/health/kpi.py) computes KPIs from raw time series and events.
 - [`src/health/anomaly.py`](src/health/anomaly.py) runs an Isolation Forest across multiple sensors to flag outliers.
 - [`src/health/traceability.py`](src/health/traceability.py) maps live KPI and anomaly context to trace IDs with suggested actions; standards mapping is explained in [docs/PM_STANDARDS_REFERENCE.md](docs/PM_STANDARDS_REFERENCE.md).
+- [`src/health/opex_strategy.py`](src/health/opex_strategy.py) turns the same analysis into **OPEX-framed** scenarios (asset strategy, inspection focus) using KPIs, anomaly density, and Weibull shape when available.
 - [`app.py`](app.py) serves the Flask UI, Chart.js endpoints, static plots, and the Weibull fit for the reliability view.
 
 ---

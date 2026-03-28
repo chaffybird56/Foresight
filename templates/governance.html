@@ -10,6 +10,13 @@
     — ISO 9001:2015 clause titles, verbatim <em>Canada Labour Code</em> quotes from <code>laws-lois.justice.gc.ca</code>, and CSA scope notes with publisher links.
   </p>
 
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+    <h2 class="h6 text-uppercase muted mb-0">OPEX-informed strategy &amp; inspection focus</h2>
+    <button type="button" class="btn btn-sm btn-outline-secondary" id="gov-refresh">Refresh</button>
+  </div>
+  <p class="small text-muted mb-3" id="opex-summary"></p>
+  <div id="opex-root" class="vstack gap-3 mb-4"></div>
+
   <div class="card p-3 mb-4">
     <h2 class="h6 text-uppercase muted">Reference frameworks</h2>
     <div class="table-responsive">
@@ -31,18 +38,43 @@
   </div>
 
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
-    <h2 class="h6 text-uppercase muted mb-0">Traceable recommendations</h2>
-    <button type="button" class="btn btn-sm btn-outline-secondary" id="rec-refresh">Refresh</button>
+    <h2 class="h6 text-uppercase muted mb-0">Traceable recommendations (standards)</h2>
   </div>
   <div id="rec-context" class="small muted mb-3"></div>
   <div id="rec-root" class="vstack gap-3"></div>
 
   <script>
+    function renderOpex(d) {
+      const sum = document.getElementById('opex-summary');
+      const ox = document.getElementById('opex-root');
+      if (!d.opex_strategy) return;
+      sum.textContent = d.opex_strategy.summary || '';
+      ox.replaceChildren();
+      for (const sc of d.opex_strategy.scenarios || []) {
+        const card = document.createElement('div');
+        card.className = 'card p-3 border-start border-3';
+        card.style.borderColor = 'var(--teal)';
+        card.innerHTML = `
+          <div class="mb-2"><span class="badge rounded-pill" style="background:var(--teal-1);color:var(--teal);">${sc.id}</span></div>
+          <h3 class="h6">${sc.title}</h3>
+          <p class="small mb-2">${sc.opex_framing}</p>
+          <p class="small fw-semibold mb-1">Asset strategy</p>
+          <ul class="small mb-2">${(sc.asset_strategy || []).map((t) => `<li>${t}</li>`).join('')}</ul>
+          <p class="small fw-semibold mb-1">Inspection focus</p>
+          <ul class="small mb-0">${(sc.inspection_focus || []).map((t) => `<li>${t}</li>`).join('')}</ul>`;
+        ox.appendChild(card);
+      }
+    }
+
     async function loadRecs() {
       const r = await fetch('/api/recommendations');
       const d = await r.json();
+      renderOpex(d);
       const ctx = document.getElementById('rec-context');
-      ctx.textContent = `Context: availability ${d.kpis.availability_pct}% · demand failures (7d) ${d.kpis.demand_failures} · open WOs ${d.kpis.open_work_orders} · outliers last 24h ${d.anomaly_window.outliers_24h} / ${d.anomaly_window.samples_24h} samples`;
+      const wb = d.weibull_fit && d.weibull_fit.beta != null
+        ? ` · Weibull β=${d.weibull_fit.beta.toFixed(2)}`
+        : '';
+      ctx.textContent = `Context: availability ${d.kpis.availability_pct}% · demand failures (7d) ${d.kpis.demand_failures} · open WOs ${d.kpis.open_work_orders} · outliers last 24h ${d.anomaly_window.outliers_24h} / ${d.anomaly_window.samples_24h} samples${wb}`;
       const root = document.getElementById('rec-root');
       root.replaceChildren();
       for (const rec of d.recommendations) {
@@ -66,7 +98,7 @@
         root.appendChild(card);
       }
     }
-    document.getElementById('rec-refresh').addEventListener('click', loadRecs);
+    document.getElementById('gov-refresh').addEventListener('click', loadRecs);
     loadRecs();
     setInterval(loadRecs, 15000);
   </script>
